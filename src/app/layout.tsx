@@ -17,13 +17,18 @@ export const metadata: Metadata = {
   description: "Tic-Tac-Toe game with local multiplayer and AI opponent",
 };
 
+const antiFlashScript = `(function(){try{var t=localStorage.getItem('zc-active-theme');var valid=['default','midnight','forest','candy','obsidian'];if(t&&valid.includes(t)&&t!=='default'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: antiFlashScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

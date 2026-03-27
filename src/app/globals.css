@@ -33,6 +33,70 @@
   }
 }
 
+/* ── Premium themes ─────────────────────────────── */
+
+[data-theme="midnight"] {
+  --background: #0a0a0f;
+  --foreground: #e0e0ff;
+  --cell-size: 100px;
+  --cell-gap: 10px;
+  --cell-bg: #12121e;
+  --cell-hover: #1a1a2e;
+  --cell-border: #1e1e35;
+  --board-bg: #0d0d18;
+  --win-cell-bg: #0f1a2e;
+  --color-x: #ff2d78;
+  --color-o: #00d4ff;
+  --color-accent: #bf00ff;
+}
+
+[data-theme="forest"] {
+  --background: #1a2314;
+  --foreground: #d4e8c2;
+  --cell-size: 100px;
+  --cell-gap: 10px;
+  --cell-bg: #1e2b17;
+  --cell-hover: #253319;
+  --cell-border: #2d3d1e;
+  --board-bg: #161e12;
+  --win-cell-bg: #1e3320;
+  --color-x: #ff6b35;
+  --color-o: #4fc978;
+  --color-accent: #8bc34a;
+}
+
+[data-theme="candy"] {
+  --background: #fff0f6;
+  --foreground: #2d1b2e;
+  --cell-size: 100px;
+  --cell-gap: 10px;
+  --cell-bg: #ffffff;
+  --cell-hover: #ffe4f0;
+  --cell-border: #ffb3d1;
+  --board-bg: #ffd6eb;
+  --win-cell-bg: #e8f5e4;
+  --color-x: #e91e8c;
+  --color-o: #7c4dff;
+  --color-accent: #ff4081;
+}
+
+[data-theme="obsidian"] {
+  --background: #0c0c0c;
+  --foreground: #f5e6c8;
+  --cell-size: 100px;
+  --cell-gap: 10px;
+  --cell-bg: #141414;
+  --cell-hover: #1c1c1c;
+  --cell-border: #2a2a2a;
+  --board-bg: #0a0a0a;
+  --win-cell-bg: #1a1500;
+  --color-x: #ffd700;
+  --color-o: #c0a050;
+  --color-accent: #ffc107;
+}
+
+/* ── Reset ──────────────────────────────────────── */
+
 * {
   box-sizing: border-box;
   padding: 0;
