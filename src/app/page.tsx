@@ -8,6 +8,7 @@ import { ScoreBoard } from '@/components/ScoreBoard/ScoreBoard';
 import { ThemeSelector } from '@/components/ThemeSelector/ThemeSelector';
 import { UltimateBoard } from '@/components/UltimateBoard/UltimateBoard';
 import { useGameState } from '@/hooks/useGameState';
+import { usePlayerNames } from '@/hooks/usePlayerNames';
 import { useTheme } from '@/hooks/useTheme';
 import { useUltimateGame } from '@/hooks/useUltimateGame';
 import styles from './page.module.css';
@@ -17,6 +18,7 @@ export default function Home() {
   const classic = useGameState();
   const ultimate = useUltimateGame();
   const { activeTheme, setTheme } = useTheme();
+  const { names, setName } = usePlayerNames();
 
   const handleModeChange = (mode: GameMode) => {
     setGameMode(mode);
@@ -42,7 +44,9 @@ export default function Home() {
       <ScoreBoard
         scores={scores}
         mode={classic.state.mode}
+        names={names}
         onSetMode={(m) => classic.setMode(m)}
+        onSetName={setName}
         hideToggle={isUltimate}
       />
 
@@ -62,6 +66,7 @@ export default function Home() {
         currentPlayer={currentPlayer}
         winner={winner}
         mode={isUltimate ? 'pvp' : classic.state.mode}
+        names={names}
         onReset={resetGame}
       />
     </main>

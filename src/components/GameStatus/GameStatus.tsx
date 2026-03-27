@@ -8,20 +8,21 @@ interface GameStatusProps {
   currentPlayer: Player;
   winner: Player | null;
   mode: GameMode;
+  names: { X: string; O: string };
   onReset: () => void;
 }
 
-export function GameStatus({ status, currentPlayer, winner, mode, onReset }: GameStatusProps) {
-  let message = '';
+export function GameStatus({ status, currentPlayer, winner, mode, names, onReset }: GameStatusProps) {
+  const nameOf = (p: Player) => mode === 'pvc' && p === 'O' ? 'Computer' : names[p];
 
+  let message = '';
   if (status === 'won') {
-    const isAI = mode === 'pvc' && winner === 'O';
-    message = isAI ? 'Computer wins!' : `Player ${winner} wins!`;
+    message = `${nameOf(winner!)} wins!`;
   } else if (status === 'draw') {
     message = "It's a draw!";
   } else {
     const isAITurn = mode === 'pvc' && currentPlayer === 'O';
-    message = isAITurn ? 'Computer is thinking...' : `Player ${currentPlayer}'s turn`;
+    message = isAITurn ? 'Computer is thinking...' : `${nameOf(currentPlayer)}'s turn`;
   }
 
   return (
