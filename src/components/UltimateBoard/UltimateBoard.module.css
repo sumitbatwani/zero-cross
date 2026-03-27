@@ -1,0 +1,8 @@
+.metaBoard {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 8px;
+  padding: 8px;
+  background: var(--board-bg);
+  border-radius: 12px;
+}

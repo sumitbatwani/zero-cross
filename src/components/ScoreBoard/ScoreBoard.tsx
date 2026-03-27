@@ -7,9 +7,10 @@ interface ScoreBoardProps {
   scores: Scores;
   mode: GameMode;
   onSetMode: (mode: GameMode) => void;
+  hideToggle?: boolean;
 }
 
-export function ScoreBoard({ scores, mode, onSetMode }: ScoreBoardProps) {
+export function ScoreBoard({ scores, mode, onSetMode, hideToggle = false }: ScoreBoardProps) {
   return (
     <div className={styles.container}>
       <div className={styles.scores}>
@@ -27,7 +28,7 @@ export function ScoreBoard({ scores, mode, onSetMode }: ScoreBoardProps) {
         </div>
       </div>
 
-      <div className={styles.modeToggle}>
+      {!hideToggle && <div className={styles.modeToggle}>
         <button
           className={`${styles.modeBtn} ${mode === 'pvp' ? styles.active : ''}`}
           onClick={() => onSetMode('pvp')}
@@ -40,7 +41,7 @@ export function ScoreBoard({ scores, mode, onSetMode }: ScoreBoardProps) {
         >
           vs Computer
         </button>
-      </div>
+      </div>}
     </div>
   );
 }
