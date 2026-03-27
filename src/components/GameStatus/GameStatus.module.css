@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+}
+
+.message {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  transition: color 0.2s ease;
+}
+
+.highlight {
+  color: var(--color-accent);
+  font-size: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.resetBtn {
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.resetBtn:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

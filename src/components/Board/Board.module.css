@@ -1,0 +1,13 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, var(--cell-size));
+  gap: var(--cell-gap);
+  padding: var(--cell-gap);
+  background: var(--board-bg);
+  border-radius: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.finished {
+  opacity: 0.85;
+}

@@ -1,0 +1,52 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: var(--cell-bg);
+  border: 2px solid var(--cell-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  outline: none;
+}
+
+.cell:hover:not(:disabled) {
+  background: var(--cell-hover);
+  transform: scale(1.03);
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.win {
+  background: var(--win-cell-bg) !important;
+}
+
+.mark {
+  font-size: calc(var(--cell-size) * 0.45);
+  font-weight: 800;
+  line-height: 1;
+  animation: pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.X .mark {
+  color: var(--color-x);
+}
+
+.O .mark {
+  color: var(--color-o);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
