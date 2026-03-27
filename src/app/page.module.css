@@ -1,7 +1,8 @@
 /* ── 3-zone layout ───────────────────────────────── */
 
 .page {
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr auto;
 }
@@ -11,8 +12,8 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 8px;
+  padding: 10px 16px 6px;
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
@@ -90,7 +91,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 0 16px;
 }
 
 .boardWrapper {
@@ -141,11 +142,11 @@
 /* ── Status bar ──────────────────────────────────── */
 
 .statusBar {
-  min-height: 48px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 4px 16px;
 }
 
 .turnText {
