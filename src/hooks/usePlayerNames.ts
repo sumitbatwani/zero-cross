@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const LS_KEY = 'zc-player-names';
 const DEFAULTS = { X: 'Player 1', O: 'Player 2' };
@@ -20,9 +20,11 @@ function readNames(): { X: string; O: string } {
 }
 
 export function usePlayerNames() {
-  const [names, setNamesState] = useState<{ X: string; O: string }>(() =>
-    typeof window === 'undefined' ? DEFAULTS : readNames()
-  );
+  const [names, setNamesState] = useState<{ X: string; O: string }>(DEFAULTS);
+
+  useEffect(() => {
+    setNamesState(readNames());
+  }, []);
 
   const setName = useCallback((player: 'X' | 'O', name: string) => {
     const trimmed = name.trim() || DEFAULTS[player];

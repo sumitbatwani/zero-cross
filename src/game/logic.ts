@@ -1,4 +1,4 @@
-import type { Board, Cell, Player } from './types';
+import type { Board, Player } from './types';
 
 const WIN_LINES = [
   [0, 1, 2],
