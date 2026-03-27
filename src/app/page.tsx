@@ -8,11 +8,13 @@ import { ScoreBoard } from '@/components/ScoreBoard/ScoreBoard';
 import { ThemeSelector } from '@/components/ThemeSelector/ThemeSelector';
 import { UltimateBoard } from '@/components/UltimateBoard/UltimateBoard';
 import { XPBar } from '@/components/XPBar/XPBar';
+import { DailyChallenge } from '@/components/DailyChallenge/DailyChallenge';
 import { useGameState } from '@/hooks/useGameState';
 import { usePlayerNames } from '@/hooks/usePlayerNames';
 import { useTheme } from '@/hooks/useTheme';
 import { useUltimateGame } from '@/hooks/useUltimateGame';
 import { useXP } from '@/hooks/useXP';
+import { useDaily } from '@/hooks/useDaily';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -22,6 +24,7 @@ export default function Home() {
   const { activeTheme, setTheme } = useTheme();
   const { names, setName } = usePlayerNames();
   const { xp, streak, awardXP } = useXP();
+  const { winsToday, goalComplete, dayStreak, recordGame } = useDaily();
   const awardedRef = useRef(false);
 
   const isUltimate = gameMode === 'ultimate';
@@ -36,8 +39,9 @@ export default function Home() {
     if (status === 'playing') { awardedRef.current = false; return; }
     if (awardedRef.current) return;
     awardedRef.current = true;
-    if (status === 'won') awardXP('win');
-    else if (status === 'draw') awardXP('draw');
+    const result = status === 'won' ? 'win' : status === 'draw' ? 'draw' : 'loss';
+    awardXP(result);
+    recordGame(result);
   }, [status, awardXP]);
 
   const handleModeChange = (mode: GameMode) => {
@@ -53,6 +57,8 @@ export default function Home() {
       <ThemeSelector activeTheme={activeTheme} onSelect={setTheme} />
 
       <XPBar xp={xp} streak={streak} />
+
+      <DailyChallenge winsToday={winsToday} goalComplete={goalComplete} dayStreak={dayStreak} />
 
       <ModeSelector mode={gameMode} onChange={handleModeChange} />
 

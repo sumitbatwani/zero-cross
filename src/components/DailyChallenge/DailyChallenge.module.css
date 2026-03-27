@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+  background: var(--cell-bg);
+  border-radius: 10px;
+  padding: 10px 16px;
+  gap: 12px;
+}
+
+.challenge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--foreground);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.dots {
+  display: flex;
+  gap: 5px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cell-border);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dot.filled {
+  background: var(--color-accent);
+  transform: scale(1.2);
+}
+
+.count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--foreground);
+  opacity: 0.4;
+}
+
+.streak {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  margin-left: auto;
+}
+
+.streakText {
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
