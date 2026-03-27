@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { LS_XP, calcXPGain, type XPState } from '@/lib/xp';
 
 const DEFAULT: XPState = { xp: 0, streak: 0 };
@@ -20,9 +20,11 @@ function readXP(): XPState {
 }
 
 export function useXP() {
-  const [state, setState] = useState<XPState>(() =>
-    typeof window === 'undefined' ? DEFAULT : readXP()
-  );
+  const [state, setState] = useState<XPState>(DEFAULT);
+
+  useEffect(() => {
+    setState(readXP());
+  }, []);
 
   const awardXP = useCallback((result: 'win' | 'draw' | 'loss') => {
     setState((prev) => {
