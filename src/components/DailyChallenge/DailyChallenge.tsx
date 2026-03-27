@@ -14,28 +14,16 @@ export function DailyChallenge({ winsToday, goalComplete, dayStreak }: DailyChal
 
   return (
     <div className={styles.container}>
-      <div className={styles.challenge}>
-        <span className={styles.label}>
-          {goalComplete ? '✅ Daily done!' : '🎯 Win 3 today'}
-        </span>
-        <div className={styles.dots}>
-          {dots.map((filled, i) => (
-            <span
-              key={i}
-              className={`${styles.dot} ${filled ? styles.filled : ''}`}
-            />
-          ))}
-        </div>
-        <span className={styles.count}>
-          {Math.min(winsToday, DAILY_WIN_GOAL)}/{DAILY_WIN_GOAL}
-        </span>
+      <span className={styles.icon}>{goalComplete ? '✅' : '🎯'}</span>
+      <div className={styles.dots}>
+        {dots.map((filled, i) => (
+          <span key={i} className={`${styles.dot} ${filled ? styles.filled : ''}`} />
+        ))}
       </div>
+      <span className={styles.count}>{Math.min(winsToday, DAILY_WIN_GOAL)}/{DAILY_WIN_GOAL}</span>
 
       {dayStreak >= 2 && (
-        <div className={styles.streak}>
-          <span>📅</span>
-          <span className={styles.streakText}>{dayStreak} day streak</span>
-        </div>
+        <span className={styles.streak}>📅 {dayStreak}d</span>
       )}
     </div>
   );

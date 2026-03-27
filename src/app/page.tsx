@@ -2,23 +2,26 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Board } from '@/components/Board/Board';
-import { GameStatus } from '@/components/GameStatus/GameStatus';
+import { DailyChallenge } from '@/components/DailyChallenge/DailyChallenge';
 import { type GameMode, ModeSelector } from '@/components/ModeSelector/ModeSelector';
 import { ScoreBoard } from '@/components/ScoreBoard/ScoreBoard';
 import { ThemeSelector } from '@/components/ThemeSelector/ThemeSelector';
 import { UltimateBoard } from '@/components/UltimateBoard/UltimateBoard';
 import { XPBar } from '@/components/XPBar/XPBar';
-import { DailyChallenge } from '@/components/DailyChallenge/DailyChallenge';
 import { useGameState } from '@/hooks/useGameState';
+import { useDaily } from '@/hooks/useDaily';
 import { usePlayerNames } from '@/hooks/usePlayerNames';
 import { useTheme } from '@/hooks/useTheme';
 import { useUltimateGame } from '@/hooks/useUltimateGame';
 import { useXP } from '@/hooks/useXP';
-import { useDaily } from '@/hooks/useDaily';
+import { THEME_MAP } from '@/lib/themes';
+import type { Player } from '@/game/types';
 import styles from './page.module.css';
 
 export default function Home() {
   const [gameMode, setGameMode] = useState<GameMode>('classic');
+  const [themeOpen, setThemeOpen] = useState(false);
+
   const classic = useGameState();
   const ultimate = useUltimateGame();
   const { activeTheme, setTheme } = useTheme();
@@ -33,16 +36,26 @@ export default function Home() {
   const winner = isUltimate ? ultimate.state.winner : classic.state.winner;
   const scores = isUltimate ? ultimate.state.scores : classic.state.scores;
   const resetGame = isUltimate ? ultimate.resetGame : classic.resetGame;
+  const pvpMode = isUltimate ? 'pvp' : classic.state.mode;
 
-  // Award XP once when game ends
+  const nameOf = (p: Player) => pvpMode === 'pvc' && p === 'O' ? 'Computer' : names[p];
+
+  const resultText = status === 'won'
+    ? `${nameOf(winner!)} wins!`
+    : "It's a draw!";
+
+  const turnText = pvpMode === 'pvc' && currentPlayer === 'O'
+    ? 'Computer is thinking...'
+    : `${nameOf(currentPlayer)}'s turn`;
+
   useEffect(() => {
     if (status === 'playing') { awardedRef.current = false; return; }
     if (awardedRef.current) return;
     awardedRef.current = true;
-    const result = status === 'won' ? 'win' : status === 'draw' ? 'draw' : 'loss';
+    const result = status === 'won' ? 'win' : 'draw';
     awardXP(result);
     recordGame(result);
-  }, [status, awardXP]);
+  }, [status, awardXP, recordGame]);
 
   const handleModeChange = (mode: GameMode) => {
     setGameMode(mode);
@@ -51,45 +64,86 @@ export default function Home() {
   };
 
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>Zero Cross</h1>
+    <div className={styles.page}>
 
-      <ThemeSelector activeTheme={activeTheme} onSelect={setTheme} />
+      {/* ── Header ── */}
+      <header className={styles.header}>
+        <div className={styles.topRow}>
+          <h1 className={styles.title}>Zero Cross</h1>
 
-      <XPBar xp={xp} streak={streak} />
+          {/* Theme popover */}
+          <button
+            className={styles.themeBtn}
+            onClick={() => setThemeOpen((o) => !o)}
+            aria-label="Change theme"
+          >
+            <span
+              className={styles.themeDot}
+              style={{ background: THEME_MAP[activeTheme].previewAccent }}
+            />
+          </button>
+          {themeOpen && (
+            <>
+              <div className={styles.themeBackdrop} onClick={() => setThemeOpen(false)} />
+              <div className={styles.themePopover}>
+                <ThemeSelector
+                  activeTheme={activeTheme}
+                  onSelect={(id) => { setTheme(id); setThemeOpen(false); }}
+                />
+              </div>
+            </>
+          )}
+        </div>
 
-      <DailyChallenge winsToday={winsToday} goalComplete={goalComplete} dayStreak={dayStreak} />
+        <XPBar xp={xp} streak={streak} />
 
-      <ModeSelector mode={gameMode} onChange={handleModeChange} />
+        <div className={styles.controlsRow}>
+          <DailyChallenge winsToday={winsToday} goalComplete={goalComplete} dayStreak={dayStreak} />
+          <ModeSelector mode={gameMode} onChange={handleModeChange} />
+        </div>
 
-      <ScoreBoard
-        scores={scores}
-        mode={classic.state.mode}
-        names={names}
-        onSetMode={(m) => classic.setMode(m)}
-        onSetName={setName}
-        hideToggle={isUltimate}
-      />
-
-      {isUltimate ? (
-        <UltimateBoard state={ultimate.state} onCellClick={ultimate.makeMove} />
-      ) : (
-        <Board
-          board={classic.state.board}
-          winLine={classic.state.winLine}
-          status={classic.state.status}
-          onCellClick={classic.makeMove}
+        <ScoreBoard
+          scores={scores}
+          mode={classic.state.mode}
+          names={names}
+          onSetMode={(m) => classic.setMode(m)}
+          onSetName={setName}
+          hideToggle={isUltimate}
         />
-      )}
+      </header>
 
-      <GameStatus
-        status={status}
-        currentPlayer={currentPlayer}
-        winner={winner}
-        mode={isUltimate ? 'pvp' : classic.state.mode}
-        names={names}
-        onReset={resetGame}
-      />
-    </main>
+      {/* ── Board zone ── */}
+      <div className={styles.boardZone}>
+        <div className={styles.boardWrapper}>
+          {isUltimate ? (
+            <UltimateBoard state={ultimate.state} onCellClick={ultimate.makeMove} />
+          ) : (
+            <Board
+              board={classic.state.board}
+              winLine={classic.state.winLine}
+              status={classic.state.status}
+              onCellClick={classic.makeMove}
+            />
+          )}
+
+          {status !== 'playing' && (
+            <div className={styles.gameOverlay}>
+              <p className={styles.resultText}>{resultText}</p>
+              <button className={styles.playAgainBtn} onClick={resetGame}>
+                Play Again
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Status bar ── */}
+      <div className={styles.statusBar}>
+        {status === 'playing' && (
+          <span className={styles.turnText}>{turnText}</span>
+        )}
+      </div>
+
+    </div>
   );
 }

@@ -1,16 +1,168 @@
-.main {
+/* ── 3-zone layout ───────────────────────────────── */
+
+.page {
   min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* ── Header ─────────────────────────────────────── */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+}
+
+/* Theme popover trigger */
+.themeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--cell-border);
+  background: var(--cell-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.themeBtn:hover {
+  border-color: var(--color-accent);
+}
+
+.themeDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: block;
+}
+
+.themeBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.themePopover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--cell-bg);
+  border: 1px solid var(--cell-border);
+  border-radius: 14px;
+  padding: 12px;
+  z-index: 50;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  animation: popoverIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ── Board zone ──────────────────────────────────── */
+
+.boardZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+.boardWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Game over overlay */
+.gameOverlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  padding: 40px 16px;
+  gap: 14px;
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  backdrop-filter: blur(3px);
+  border-radius: 12px;
+  animation: fadeIn 0.2s ease;
 }
 
-.title {
-  font-size: 2.5rem;
+.resultText {
+  font-size: 1.4rem;
   font-weight: 800;
-  letter-spacing: -0.05em;
   color: var(--color-accent);
+  text-align: center;
+}
+
+.playAgainBtn {
+  padding: 10px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.playAgainBtn:hover {
+  opacity: 0.88;
+  transform: scale(1.03);
+}
+
+/* ── Status bar ──────────────────────────────────── */
+
+.statusBar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+.turnText {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--foreground);
+  opacity: 0.65;
+}
+
+/* ── Animations ──────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes popoverIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
