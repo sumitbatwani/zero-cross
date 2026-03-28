@@ -13,4 +13,5 @@ export interface UltimateState {
 
 export type UltimateAction =
   | { type: 'MAKE_MOVE'; boardIndex: number; cellIndex: number }
-  | { type: 'RESET_GAME' };
+  | { type: 'RESET_GAME' }
+  | { type: 'TIMEOUT' };

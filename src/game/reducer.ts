@@ -1,5 +1,5 @@
 import { checkWinner, isBoardFull } from './logic';
-import type { GameAction, GameState } from './types';
+import type { GameAction, GameState, Player } from './types';
 
 export const INITIAL_STATE: GameState = {
   board: [null, null, null, null, null, null, null, null, null],
@@ -57,6 +57,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         mode: state.mode,
         scores: state.scores,
       };
+
+    case 'TIMEOUT': {
+      if (state.status !== 'playing') return state;
+      const xCount = state.board.filter((c) => c === 'X').length;
+      const oCount = state.board.filter((c) => c === 'O').length;
+      if (xCount === oCount) {
+        return { ...state, status: 'draw', scores: { ...state.scores, draws: state.scores.draws + 1 } };
+      }
+      const winner: Player = xCount > oCount ? 'X' : 'O';
+      return {
+        ...state,
+        status: 'won',
+        winner,
+        winLine: null,
+        scores: { ...state.scores, [winner]: state.scores[winner] + 1 },
+      };
+    }
 
     case 'SET_MODE':
       return {

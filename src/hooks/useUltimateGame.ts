@@ -8,6 +8,7 @@ export function useUltimateGame() {
 
   return {
     state,
+    dispatch,
     makeMove: (boardIndex: number, cellIndex: number) =>
       dispatch({ type: 'MAKE_MOVE', boardIndex, cellIndex }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),

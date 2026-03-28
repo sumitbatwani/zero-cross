@@ -24,6 +24,7 @@ export function useGameState() {
 
   return {
     state,
+    dispatch,
     makeMove: (index: number) => dispatch({ type: 'MAKE_MOVE', index }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),
     setMode: (mode: GameMode) => dispatch({ type: 'SET_MODE', mode }),

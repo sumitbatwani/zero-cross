@@ -8,7 +8,9 @@ import { ScoreBoard } from '@/components/ScoreBoard/ScoreBoard';
 import { ThemeSelector } from '@/components/ThemeSelector/ThemeSelector';
 import { UltimateBoard } from '@/components/UltimateBoard/UltimateBoard';
 import { XPBar } from '@/components/XPBar/XPBar';
+import { Timer } from '@/components/Timer/Timer';
 import { useGameState } from '@/hooks/useGameState';
+import { useTimer } from '@/hooks/useTimer';
 import { useDaily } from '@/hooks/useDaily';
 import { usePlayerNames } from '@/hooks/usePlayerNames';
 import { useTheme } from '@/hooks/useTheme';
@@ -28,6 +30,8 @@ export default function Home() {
   const { names, setName } = usePlayerNames();
   const { xp, streak, awardXP } = useXP();
   const { winsToday, goalComplete, dayStreak, recordGame } = useDaily();
+  const [timeMode, setTimeMode] = useState<'flash' | 'unlimited'>('flash');
+  const [gameStarted, setGameStarted] = useState(false);
   const awardedRef = useRef(false);
 
   const isUltimate = gameMode === 'ultimate';
@@ -37,6 +41,20 @@ export default function Home() {
   const scores = isUltimate ? ultimate.state.scores : classic.state.scores;
   const resetGame = isUltimate ? ultimate.resetGame : classic.resetGame;
   const pvpMode = isUltimate ? 'pvp' : classic.state.mode;
+
+  const flashEnabled = timeMode === 'flash';
+
+  const handleTimeout = () => {
+    if (isUltimate) ultimate.dispatch({ type: 'TIMEOUT' });
+    else classic.dispatch({ type: 'TIMEOUT' });
+  };
+
+  const { timeLeft, seconds } = useTimer({
+    enabled: flashEnabled,
+    started: gameStarted,
+    gameStatus: status,
+    onTimeout: handleTimeout,
+  });
 
   const nameOf = (p: Player) => pvpMode === 'pvc' && p === 'O' ? 'Computer' : names[p];
 
@@ -57,10 +75,16 @@ export default function Home() {
     recordGame(result);
   }, [status, awardXP, recordGame]);
 
+  const handleReset = () => {
+    resetGame();
+    setGameStarted(false);
+  };
+
   const handleModeChange = (mode: GameMode) => {
     setGameMode(mode);
     classic.resetGame();
     ultimate.resetGame();
+    setGameStarted(false);
   };
 
   return (
@@ -71,28 +95,40 @@ export default function Home() {
         <div className={styles.topRow}>
           <h1 className={styles.title}>Zero Cross</h1>
 
-          {/* Theme popover */}
-          <button
-            className={styles.themeBtn}
-            onClick={() => setThemeOpen((o) => !o)}
-            aria-label="Change theme"
-          >
+          <div className={styles.headerActions}>
+            {/* Restart */}
+            <button
+              className={styles.iconBtn}
+              onClick={handleReset}
+              aria-label="Restart game"
+              title="Restart game"
+            >
+              ↺
+            </button>
+
+            {/* Theme popover */}
+            <button
+              className={styles.themeBtn}
+              onClick={() => setThemeOpen((o) => !o)}
+              aria-label="Change theme"
+            >
             <span
               className={styles.themeDot}
               style={{ background: THEME_MAP[activeTheme].previewAccent }}
             />
           </button>
-          {themeOpen && (
-            <>
-              <div className={styles.themeBackdrop} onClick={() => setThemeOpen(false)} />
-              <div className={styles.themePopover}>
-                <ThemeSelector
-                  activeTheme={activeTheme}
-                  onSelect={(id) => { setTheme(id); setThemeOpen(false); }}
-                />
-              </div>
-            </>
-          )}
+            {themeOpen && (
+              <>
+                <div className={styles.themeBackdrop} onClick={() => setThemeOpen(false)} />
+                <div className={styles.themePopover}>
+                  <ThemeSelector
+                    activeTheme={activeTheme}
+                    onSelect={(id) => { setTheme(id); setThemeOpen(false); }}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <XPBar xp={xp} streak={streak} />
@@ -126,10 +162,20 @@ export default function Home() {
             />
           )}
 
+          {/* Start Game overlay */}
+          {status === 'playing' && !gameStarted && (
+            <div className={styles.gameOverlay}>
+              <button className={styles.startBtn} onClick={() => setGameStarted(true)}>
+                ▶ Start Game
+              </button>
+            </div>
+          )}
+
+          {/* Game over overlay */}
           {status !== 'playing' && (
             <div className={styles.gameOverlay}>
               <p className={styles.resultText}>{resultText}</p>
-              <button className={styles.playAgainBtn} onClick={resetGame}>
+              <button className={styles.playAgainBtn} onClick={handleReset}>
                 Play Again
               </button>
             </div>
@@ -139,9 +185,26 @@ export default function Home() {
 
       {/* ── Status bar ── */}
       <div className={styles.statusBar}>
+        {status === 'playing' && flashEnabled && gameStarted && (
+          <Timer timeLeft={timeLeft} seconds={seconds} />
+        )}
         {status === 'playing' && (
           <span className={styles.turnText}>{turnText}</span>
         )}
+        <div className={styles.timeModeToggle}>
+          <button
+            className={`${styles.timeModeBtn} ${timeMode === 'flash' ? styles.active : ''}`}
+            onClick={() => setTimeMode('flash')}
+          >
+            ⚡ Flash
+          </button>
+          <button
+            className={`${styles.timeModeBtn} ${timeMode === 'unlimited' ? styles.active : ''}`}
+            onClick={() => setTimeMode('unlimited')}
+          >
+            ∞ <span className={styles.proBadge}>PRO</span>
+          </button>
+        </div>
       </div>
 
     </div>

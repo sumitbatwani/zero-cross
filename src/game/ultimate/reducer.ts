@@ -81,6 +81,24 @@ export function ultimateReducer(state: UltimateState, action: UltimateAction): U
       };
     }
 
+    case 'TIMEOUT': {
+      if (state.status !== 'playing') return state;
+      const allCells = state.boards.flat();
+      const xCount = allCells.filter((c) => c === 'X').length;
+      const oCount = allCells.filter((c) => c === 'O').length;
+      if (xCount === oCount) {
+        return { ...state, status: 'draw', scores: { ...state.scores, draws: state.scores.draws + 1 } };
+      }
+      const winner: Player = xCount > oCount ? 'X' : 'O';
+      return {
+        ...state,
+        status: 'won',
+        winner,
+        winLine: null,
+        scores: { ...state.scores, [winner]: state.scores[winner] + 1 },
+      };
+    }
+
     case 'RESET_GAME':
       return { ...INITIAL_ULTIMATE_STATE, scores: state.scores };
 

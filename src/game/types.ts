@@ -23,4 +23,5 @@ export interface GameState {
 export type GameAction =
   | { type: 'MAKE_MOVE'; index: number }
   | { type: 'RESET_GAME' }
-  | { type: 'SET_MODE'; mode: GameMode };
+  | { type: 'SET_MODE'; mode: GameMode }
+  | { type: 'TIMEOUT' };
